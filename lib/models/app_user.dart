@@ -22,4 +22,20 @@ class AppUser {
       refreshToken: refreshToken,
     );
   }
+
+  AppUser copyWith({
+    String? steamID,
+    String? name,
+    String? avatarURL,
+    String? accessToken,
+    String? refreshToken,
+  }) {
+    return AppUser(
+      steamID: steamID ?? this.steamID,
+      name: name ?? this.name,
+      avatarURL: avatarURL ?? this.avatarURL,
+      accessToken: accessToken ?? this.accessToken,
+      refreshToken: refreshToken ?? this.refreshToken,
+    );
+  }
 }
