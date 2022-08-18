@@ -18,7 +18,7 @@ class UsersPage extends StatelessWidget {
                   title: Text(
                       "${user.name} ${countryEmoji[user.country]?['emoji'] ?? ''}"),
                   subtitle: Text(
-                      "${user.country != '' ? "country: ${countryEmoji[user.country]?['name'] ?? ''} \n" : ""}joined: ${user.joinDate}"),
+                      "${user.country != '' ? "country: ${countryEmoji[user.country]?['name'] ?? ''} \n" : ""}joined: ${user.joinDate.toIso8601String().split('T').first}"),
                   trailing: user.avatarURL != null
                       ? CircleAvatar(
                           backgroundImage: NetworkImage(user.avatarURL!.replaceAll(

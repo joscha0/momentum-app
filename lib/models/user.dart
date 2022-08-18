@@ -4,7 +4,7 @@ class User {
   final String name;
   final String? avatarURL;
   final String country;
-  final String joinDate;
+  final DateTime joinDate;
   User({
     required this.id,
     required this.steamID,
@@ -21,7 +21,7 @@ class User {
       name: json['alias'],
       avatarURL: json['avatarURL'],
       country: json['country'] ?? "",
-      joinDate: json['createdAt'],
+      joinDate: DateTime.parse(json['createdAt']),
     );
   }
 
@@ -31,7 +31,7 @@ class User {
     String? name,
     String? avatarURL,
     String? country,
-    String? joinDate,
+    DateTime? joinDate,
   }) {
     return User(
       id: id ?? this.id,
