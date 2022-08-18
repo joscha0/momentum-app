@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
-import 'package:steam_login/steam_login.dart';
 
 void main() => runApp(const MyApp());
 
@@ -27,7 +26,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  String steamId = "";
+  String? steamId;
 
   @override
   Widget build(BuildContext context) {
@@ -64,16 +63,16 @@ class SteamLogin extends StatelessWidget {
   Widget build(BuildContext context) {
     // Listen to the onUrlChanged events, and when we are ready to validate do so.
     _webView.onUrlChanged.listen((String url) async {
-      var openId = OpenId.fromUri(Uri.parse(url));
-      if (openId.mode == 'id_res') {
+      print(url);
+      if (url == "https://momentum-mod.org/dashboard") {
+        var cookies = await _webView.getCookies();
         await _webView.close();
-        Navigator.of(context).pop(openId.validate());
+        Navigator.of(context).pop(cookies.toString());
       }
     });
 
-    var openId = OpenId.raw('https://myapp', 'https://myapp/', {});
     return WebviewScaffold(
-        url: openId.authUrl().toString(),
+        url: "https://api.momentum-mod.org/auth/steam",
         appBar: AppBar(
           title: const Text('Steam Login'),
         ));
