@@ -17,9 +17,9 @@ class User {
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
       id: json['id'],
-      steamID: json['steamID'],
-      name: json['alias'],
-      avatarURL: json['avatarURL'],
+      steamID: json['steamID'] ?? "",
+      name: json['alias'] ?? "",
+      avatarURL: json['avatarURL'] ?? "",
       country: json['country'] ?? "",
       joinDate: DateTime.parse(json['createdAt']),
     );

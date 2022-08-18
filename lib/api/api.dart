@@ -49,7 +49,6 @@ class API {
       if (accessToken != null) {
         String headers = json.encode({'authorization': "Bearer $accessToken"});
         String paramsString = mapToParamsString(params);
-        print("$baseUrl/$url$paramsString");
         http.Response response = await http.get(
           Uri.parse("$baseUrl/$url$paramsString"),
           headers: {
@@ -75,7 +74,7 @@ class API {
     int? offset,
     String? search,
   }) async {
-    Map? data = await apiRequest("users",
+    Map? data = await apiRequest("users/",
         params: {"limit": limit, "offset": offset, "search": search});
     if (data != null) {
       List<User> users = [];
