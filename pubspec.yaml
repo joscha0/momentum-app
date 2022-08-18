@@ -33,6 +33,7 @@ dependencies:
   flutter_riverpod: ^1.0.4
   flutter_webview_plugin: ^0.4.0
   http: ^0.13.5
+  infinite_scroll_pagination: ^3.2.0
   jwt_decode: ^0.3.1
   shared_preferences: ^2.0.15
 
