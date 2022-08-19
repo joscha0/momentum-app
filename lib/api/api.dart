@@ -2,18 +2,18 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:http/http.dart' as http;
 import 'package:jwt_decode/jwt_decode.dart';
+import 'package:momentum/global/config.dart';
 import 'package:momentum/models/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter/foundation.dart';
 
 class API {
-  static const String baseAuthUrl = kReleaseMode
+  static const String baseAuthUrl = CONFIG.releaseMode
       ? "https://auth.momentum-mod.org/auth/"
       : "http://192.168.1.72:3002/auth/";
-  static const String baseUrl = kReleaseMode
+  static const String baseUrl = CONFIG.releaseMode
       ? "https://api.momentum-mod.org/api"
       : "http://192.168.1.72:3002/api";
-  static const String dashboardUrl = kReleaseMode
+  static const String dashboardUrl = CONFIG.releaseMode
       ? "https://momentum-mod.org/dashboard"
       : "http://192.168.1.72:3002/dashboard";
 
