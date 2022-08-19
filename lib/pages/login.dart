@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:momentum/pages/login_refresh.dart';
 
 import 'login_steam.dart';
 
@@ -9,7 +10,7 @@ class LoginPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Steam Login'),
+        title: const Text('Login'),
       ),
       body: Center(
         child: Column(
@@ -21,6 +22,12 @@ class LoginPage extends StatelessWidget {
                     MaterialPageRoute(builder: (context) => SteamLogin()));
               },
             ),
+            TextButton(
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const LoginRefresh()));
+                },
+                child: const Text('Login with refresh token'))
           ],
         ),
       ),

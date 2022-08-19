@@ -46,7 +46,8 @@ class API {
     return paramsString.substring(0, paramsString.length - 1);
   }
 
-  static Future<Map?> apiRequest(String url, {Map params = const {}}) async {
+  static Future<Map<String, dynamic>?> apiRequest(String url,
+      {Map params = const {}}) async {
     final prefs = await SharedPreferences.getInstance();
     String? refreshToken = prefs.getString("refreshToken");
     String? accessToken = prefs.getString("accessToken");
@@ -65,7 +66,7 @@ class API {
           },
         );
         if (response.statusCode == 200) {
-          final Map data = jsonDecode(response.body);
+          final Map<String, dynamic> data = jsonDecode(response.body);
           if (!data.containsKey("error")) {
             return data;
           }
@@ -92,5 +93,11 @@ class API {
       return users;
     }
     return [];
+  }
+
+  static Future<Map<String, dynamic>?> getUser() async {
+    return await apiRequest(
+      "user/",
+    );
   }
 }
