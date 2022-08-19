@@ -13,6 +13,8 @@ class UsersPage extends StatefulWidget {
 
 class _UsersPageState extends State<UsersPage> {
   static const _pageSize = 20;
+  String? _searchTerm;
+  late TextEditingController _controller;
 
   final PagingController<int, User> _pagingController =
       PagingController(firstPageKey: 0);
@@ -23,12 +25,13 @@ class _UsersPageState extends State<UsersPage> {
       _fetchPage(pageKey);
     });
     super.initState();
+    _controller = TextEditingController();
   }
 
   Future<void> _fetchPage(int pageKey) async {
-    print(pageKey);
     try {
-      final newItems = await API.getUsers(offset: pageKey, limit: _pageSize);
+      final newItems = await API.getUsers(
+          offset: pageKey, limit: _pageSize, search: _searchTerm);
       final isLastPage = newItems.length < _pageSize;
       if (isLastPage) {
         _pagingController.appendLastPage(newItems);
@@ -39,6 +42,14 @@ class _UsersPageState extends State<UsersPage> {
     } catch (error) {
       _pagingController.error = error;
     }
+  }
+
+  void _updateSearchTerm(String searchTerm) {
+    _searchTerm = searchTerm;
+    if (searchTerm == "") {
+      _controller.text = searchTerm;
+    }
+    _pagingController.refresh();
   }
 
   String getImageUrl(String oldUrl) {
@@ -54,60 +65,73 @@ class _UsersPageState extends State<UsersPage> {
 
   @override
   Widget build(BuildContext context) {
-    return PagedListView<int, User>(
-      pagingController: _pagingController,
-      builderDelegate: PagedChildBuilderDelegate<User>(
-        animateTransitions: true,
-        itemBuilder: (context, user, index) => ListTile(
-          title: Text(
-              "${user.name} ${countryEmoji[user.country]?['emoji'] ?? ''}"),
-          subtitle: Text(
-              "${user.country != '' ? "country: ${countryEmoji[user.country]?['name'] ?? ''} \n" : ""}joined: ${user.joinDate.toIso8601String().split('T').first}"),
-          trailing: user.avatarURL != null && user.avatarURL != ""
-              ? CircleAvatar(
-                  backgroundImage:
-                      NetworkImage(getImageUrl(user.avatarURL ?? "")),
-                )
-              : const CircleAvatar(
-                  child: Icon(Icons.person),
-                ),
+    return CustomScrollView(slivers: [
+      const SliverAppBar(
+        expandedHeight: 100.0,
+        flexibleSpace: FlexibleSpaceBar(
+          centerTitle: true,
+          title: Text('Users'),
         ),
       ),
-    );
-
-    // FutureBuilder<List<User>>(
-    //     future: API.getUsers(),
-    //     builder: (context, snapshot) {
-    //       if (snapshot.hasData) {
-    //         return ListView(children: [
-    //           ...snapshot.data!.map((user) {
-    //             return ListTile(
-    //               title: Text(
-    //                   "${user.name} ${countryEmoji[user.country]?['emoji'] ?? ''}"),
-    //               subtitle: Text(
-    //                   "${user.country != '' ? "country: ${countryEmoji[user.country]?['name'] ?? ''} \n" : ""}joined: ${user.joinDate.toIso8601String().split('T').first}"),
-    //               trailing: user.avatarURL != null
-    //                   ? CircleAvatar(
-    //                       backgroundImage: NetworkImage(user.avatarURL!.replaceAll(
-    //                           "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/avatars/",
-    //                           "")),
-    //                     )
-    //                   : Container(),
-    //             );
-    //           })
-    //         ]);
-    //       } else if (snapshot.hasError) {
-    //         return Text('${snapshot.error}');
-    //       }
-    //       return const Center(
-    //         child: CircularProgressIndicator(),
-    //       );
-    //     });
+      SliverAppBar(
+        pinned: true,
+        actions: [IconButton(icon: const Icon(Icons.tune), onPressed: () {})],
+        title: Container(
+          height: 40,
+          decoration: BoxDecoration(
+              color: Theme.of(context).scaffoldBackgroundColor,
+              borderRadius: BorderRadius.circular(5)),
+          child: TextField(
+            controller: _controller,
+            decoration: InputDecoration(
+                prefixIcon: const Icon(Icons.search),
+                suffixIcon: IconButton(
+                  icon: const Icon(Icons.clear),
+                  onPressed: () {
+                    _updateSearchTerm("");
+                  },
+                ),
+                hintText: 'Search...',
+                border: InputBorder.none),
+            onChanged: (searchTerm) => _updateSearchTerm(searchTerm),
+          ),
+        ),
+      ),
+      SliverPadding(
+        padding: const EdgeInsets.all(8.0),
+        sliver: PagedSliverList<int, User>(
+          pagingController: _pagingController,
+          builderDelegate: PagedChildBuilderDelegate<User>(
+            animateTransitions: true,
+            itemBuilder: (context, user, index) => Card(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ListTile(
+                  title: Text(
+                      "${user.name} ${countryEmoji[user.country]?['emoji'] ?? ''}"),
+                  subtitle: Text(
+                      "${user.country != '' ? "country: ${countryEmoji[user.country]?['name'] ?? ''} \n" : ""}joined: ${user.joinDate.toIso8601String().split('T').first}"),
+                  trailing: user.avatarURL != null && user.avatarURL != ""
+                      ? CircleAvatar(
+                          backgroundImage:
+                              NetworkImage(getImageUrl(user.avatarURL ?? "")),
+                        )
+                      : const CircleAvatar(
+                          child: Icon(Icons.person),
+                        ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      )
+    ]);
   }
 
   @override
   void dispose() {
     _pagingController.dispose();
+    _controller.dispose();
     super.dispose();
   }
 }
