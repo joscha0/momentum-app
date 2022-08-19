@@ -14,7 +14,18 @@ class LoginPage extends StatelessWidget {
       ),
       body: Center(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.max,
           children: <Widget>[
+            const Padding(
+              padding: EdgeInsets.all(16.0),
+              child: CircleAvatar(
+                  radius: 42,
+                  child: Icon(
+                    Icons.person,
+                    size: 54,
+                  )),
+            ),
             ElevatedButton(
               child: const Text('Login with Steam'),
               onPressed: () {
