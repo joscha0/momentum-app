@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
+import 'package:momentum/api/api.dart';
 import 'package:momentum/pages/auth.dart';
 import 'package:momentum/providers/auth_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -13,7 +14,7 @@ class SteamLogin extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref, [bool mounted = true]) {
     _webView.onUrlChanged.listen((String url) async {
-      if (url == "https://momentum-mod.org/dashboard") {
+      if (url == API.dashboardUrl) {
         var cookies = await _webView.getCookies();
         final prefs = await SharedPreferences.getInstance();
 
@@ -34,7 +35,7 @@ class SteamLogin extends ConsumerWidget {
     });
 
     return WebviewScaffold(
-        url: "https://api.momentum-mod.org/auth/steam",
+        url: "${API.baseAuthUrl}steam",
         appBar: AppBar(
           title: const Text('Steam Login'),
         ));

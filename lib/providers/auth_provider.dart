@@ -4,8 +4,6 @@ import 'package:momentum/models/app_user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
-const String baseAuthUrl = "https://auth.momentum-mod.org/auth";
-
 class AuthService {
   Future<void> _clearPrefs() async {
     final prefs = await SharedPreferences.getInstance();
@@ -18,6 +16,7 @@ class AuthService {
     final prefs = await SharedPreferences.getInstance();
     // await _clearPrefs();
     String? refreshToken = prefs.getString("refreshToken");
+    // print(refreshToken);
     if (refreshToken != null && refreshToken != "") {
       String? accessToken = await API.getNewAccessToken(refreshToken);
       if (accessToken != null) {
