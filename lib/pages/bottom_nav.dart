@@ -13,14 +13,25 @@ class BottomNavigationBarView extends ConsumerWidget {
 
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        unselectedItemColor: Theme.of(context).colorScheme.onSurface,
+        selectedItemColor: Theme.of(context).colorScheme.primary,
+        type: BottomNavigationBarType.shifting,
         currentIndex: pageIndex,
         onTap: (index) {
           ref.read(pageIndexProvider.state).state = index;
         },
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.people), label: 'Users'),
+        items: [
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.home),
+            label: 'Home',
+            backgroundColor: Theme.of(context).colorScheme.surface,
+          ),
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.people),
+            label: 'Users',
+            backgroundColor: Theme.of(context).colorScheme.surface,
+          ),
         ],
       ),
       body: IndexedStack(
